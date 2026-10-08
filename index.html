@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>내 사이트 허브</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #eef1f5;
+    --surface: #ffffff;
+    --fg: #14202e;
+    --muted: #5b6b7d;
+    --line: #d5dce5;
+    --accent: #1f5fbf;
+    --accent-soft: #e2ecfa;
+    --gh: #2b7a5a;
+    --gh-soft: #dff2e9;
+    --font-body: "IBM Plex Sans KR", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1620; --surface: #172230; --fg: #e6ecf3; --muted: #94a3b5; --line: #2a394b;
+      --accent: #7aa9ee; --accent-soft: #1d3252; --gh: #6fcaa1; --gh-soft: #17362b;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1620; --surface: #172230; --fg: #e6ecf3; --muted: #94a3b5; --line: #2a394b;
+    --accent: #7aa9ee; --accent-soft: #1d3252; --gh: #6fcaa1; --gh-soft: #17362b;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 16px 56px;
+    word-break: keep-all;
+  }
+  .wrap { max-width: 880px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+
+  header { display: flex; flex-direction: column; gap: 6px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+  h1 { margin: 0; font-size: clamp(28px, 6vw, 40px); line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
+  .sub { margin: 0; color: var(--muted); }
+
+  .tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .search { flex: 1 1 220px; min-width: 0; }
+  .search input {
+    width: 100%; font: inherit; color: var(--fg);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .search input::placeholder { color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 14px; color: var(--fg); cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+  .chip:hover { border-color: var(--accent); }
+  input:focus-visible, .chip:focus-visible, a.item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  ul.list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 720px) { ul.list { grid-template-columns: 1fr 1fr; } }
+  ul.list > li { min-width: 0; }
+
+  a.item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 4px 16px; align-items: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px; color: inherit; text-decoration: none; height: 100%;
+  }
+  a.item:hover { border-color: var(--accent); }
+  a.item:hover .go { transform: translate(2px, -2px); color: var(--accent); }
+  .ico { grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; }
+  .ico.art { background: var(--accent-soft); color: var(--accent); }
+  .ico.gh { background: var(--gh-soft); color: var(--gh); }
+  .ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .no { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .name { font-size: 17px; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+  .go { grid-row: 1 / span 2; grid-column: 3; font-size: 18px; color: var(--muted); transition: transform .15s; }
+  .meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
+  .tag { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
+  .tag.art { background: var(--accent-soft); color: var(--accent); }
+  .tag.gh { background: var(--gh-soft); color: var(--gh); }
+  .short { font-family: var(--font-mono); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; min-width: 0; }
+
+  .empty { color: var(--muted); padding: 24px 0; }
+  footer { color: var(--muted); font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { .go { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Personal Hub</div>
+    <h1>내 사이트 허브</h1>
+    <p class="sub">직접 만든 아티팩트와 GitHub 링크를 한곳에서 엽니다.</p>
+  </header>
+
+  <div class="tools">
+    <div class="search">
+      <input id="q" type="search" placeholder="제목으로 검색" autocomplete="off" aria-label="제목으로 검색">
+    </div>
+    <div class="chips" role="group" aria-label="종류 필터">
+      <button class="chip" type="button" data-f="all" aria-pressed="true">전체</button>
+      <button class="chip" type="button" data-f="art" aria-pressed="false">아티팩트</button>
+      <button class="chip" type="button" data-f="gh" aria-pressed="false">GitHub</button>
+    </div>
+  </div>
+
+  <ul class="list" id="list"></ul>
+  <div class="empty" id="empty" hidden>조건에 맞는 사이트가 없습니다.</div>
+
+  <footer>총 <span id="count">5</span>개</footer>
+</div>
+
+<script>
+  var ICONS = {
+    algo:    '<svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="12" r="2.5"/><circle cx="6" cy="19" r="2.5"/><path d="M8.2 6.2 15.8 10.8M8.2 17.8 15.8 13.2"/></svg>',
+    cert:    '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 8.5h10M7 12h5"/><circle cx="16.5" cy="17.5" r="2.5"/><path d="M15.3 19.8 14.8 22l1.7-1 1.7 1-.5-2.2"/></svg>',
+    doc:     '<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>',
+    globe:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9z"/></svg>',
+    caption: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 11h4M13 11h4M7 15h2M11 15h6"/></svg>'
+  };
+
+  var SITES = [
+    { no: 1, title: "알고리즘 설계",    icon: "algo",    url: "https://claude.ai/code/artifact/23d94156-d910-415c-99a2-1594a61df2e6", kind: "art", label: "아티팩트" },
+    { no: 2, title: "정보처리산업기사", icon: "cert",    url: "https://claude.ai/artifact/CFsQcNg7ryUp1hsybQC1tx",                  kind: "art", label: "아티팩트" },
+    { no: 3, title: "기안문 작성기",    icon: "doc",     url: "https://claude.ai/artifact/WTB35h5vjs9Q4ePLwVRP2L",                  kind: "art", label: "아티팩트" },
+    { no: 4, title: "세상 한눈에",      icon: "globe",   url: "https://bottlehoney99.github.io/sesang-hannune/",                     kind: "gh",  label: "GitHub Pages" },
+    { no: 5, title: "수업 실시간 자막", icon: "caption", url: "https://bottlehoney99.github.io/class_review",                        kind: "gh",  label: "GitHub Pages" }
+  ];
+
+  var listEl = document.getElementById("list");
+  var emptyEl = document.getElementById("empty");
+  var countEl = document.getElementById("count");
+  var qEl = document.getElementById("q");
+  var filter = "all";
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function render() {
+    var q = qEl.value.trim().toLowerCase();
+    var shown = SITES.filter(function (s) {
+      return (filter === "all" || s.kind === filter) &&
+        (!q || s.title.toLowerCase().indexOf(q) !== -1);
+    });
+    listEl.innerHTML = "";
+    shown.forEach(function (s) {
+      var li = el("li");
+      var a = el("a", "item");
+      a.href = s.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      var ico = el("span", "ico " + s.kind);
+      ico.setAttribute("aria-hidden", "true");
+      ico.innerHTML = ICONS[s.icon] || "";
+
+      var go = el("span", "go", "↗");
+      go.setAttribute("aria-hidden", "true");
+
+      var meta = el("span", "meta");
+      meta.appendChild(el("span", "no", String(s.no).padStart(2, "0")));
+      meta.appendChild(el("span", "tag " + s.kind, s.label));
+      meta.appendChild(el("span", "short", new URL(s.url).host));
+
+      a.appendChild(ico);
+      a.appendChild(el("span", "name", s.title));
+      a.appendChild(go);
+      a.appendChild(meta);
+      li.appendChild(a);
+      listEl.appendChild(li);
+    });
+    emptyEl.hidden = shown.length !== 0;
+    countEl.textContent = String(SITES.length);
+  }
+
+  document.querySelectorAll(".chip").forEach(function (b) {
+    b.addEventListener("click", function () {
+      filter = b.getAttribute("data-f");
+      document.querySelectorAll(".chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", c === b ? "true" : "false");
+      });
+      render();
+    });
+  });
+  qEl.addEventListener("input", render);
+  render();
+</script>
+</body>
+</html>
