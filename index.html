@@ -69,19 +69,24 @@
   }
   .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
   .chip:hover { border-color: var(--accent); }
-  input:focus-visible, .chip:focus-visible, a.item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  input:focus-visible, .chip:focus-visible, .item:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   ul.list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
   @media (min-width: 720px) { ul.list { grid-template-columns: 1fr 1fr; } }
   ul.list > li { min-width: 0; }
 
-  a.item {
+  .item {
+    position: relative;
     display: grid; grid-template-columns: auto 1fr auto; gap: 4px 16px; align-items: center;
     background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-    padding: 18px; color: inherit; text-decoration: none; height: 100%;
+    padding: 18px; color: inherit; height: 100%;
   }
-  a.item:hover { border-color: var(--accent); }
-  a.item:hover .go { transform: translate(2px, -2px); color: var(--accent); }
+  .item:hover { border-color: var(--accent); }
+  .item:hover .go { transform: translate(2px, -2px); color: var(--accent); }
+  a.main { color: inherit; text-decoration: none; }
+  a.main::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+  a.extra { position: relative; z-index: 1; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--gh-soft); color: var(--gh); text-decoration: none; }
+  a.extra:hover { text-decoration: underline; }
   .ico { grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; }
   .ico.art { background: var(--accent-soft); color: var(--accent); }
   .ico.gh { background: var(--gh-soft); color: var(--gh); }
@@ -137,7 +142,8 @@
   };
 
   var SITES = [
-    { no: 1, title: "알고리즘 설계",    icon: "algo",    url: "https://claude.ai/code/artifact/23d94156-d910-415c-99a2-1594a61df2e6", kind: "art", label: "아티팩트" },
+    { no: 1, title: "알고리즘 설계",    icon: "algo",    url: "https://claude.ai/code/artifact/23d94156-d910-415c-99a2-1594a61df2e6", kind: "art", label: "아티팩트",
+      extra: [{ label: "GitHub Pages", url: "https://bottlehoney99.github.io/doc-algo/" }] },
     { no: 2, title: "정보처리산업기사", icon: "cert",    url: "https://claude.ai/artifact/CFsQcNg7ryUp1hsybQC1tx",                  kind: "art", label: "아티팩트" },
     { no: 3, title: "기안문 작성기",    icon: "doc",     url: "https://claude.ai/artifact/WTB35h5vjs9Q4ePLwVRP2L",                  kind: "art", label: "아티팩트" },
     { no: 4, title: "세상 한눈에",      icon: "globe",   url: "https://bottlehoney99.github.io/sesang-hannune/",                     kind: "gh",  label: "GitHub Pages" },
@@ -168,10 +174,13 @@
     listEl.innerHTML = "";
     shown.forEach(function (s) {
       var li = el("li");
-      var a = el("a", "item");
-      a.href = s.url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
+      var a = el("div", "item");
+      var main = el("a", "main", s.title);
+      main.href = s.url;
+      main.target = "_blank";
+      main.rel = "noopener noreferrer";
+      var name = el("span", "name");
+      name.appendChild(main);
 
       var ico = el("span", "ico " + s.kind);
       ico.setAttribute("aria-hidden", "true");
@@ -184,9 +193,16 @@
       meta.appendChild(el("span", "no", String(s.no).padStart(2, "0")));
       meta.appendChild(el("span", "tag " + s.kind, s.label));
       meta.appendChild(el("span", "short", new URL(s.url).host));
+      (s.extra || []).forEach(function (x) {
+        var e = el("a", "extra", x.label + " ↗");
+        e.href = x.url;
+        e.target = "_blank";
+        e.rel = "noopener noreferrer";
+        meta.appendChild(e);
+      });
 
       a.appendChild(ico);
-      a.appendChild(el("span", "name", s.title));
+      a.appendChild(name);
       a.appendChild(go);
       a.appendChild(meta);
       li.appendChild(a);
