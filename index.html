@@ -90,6 +90,7 @@
   .ico { grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; }
   .ico.art { background: var(--accent-soft); color: var(--accent); }
   .ico.gh { background: var(--gh-soft); color: var(--gh); }
+  .ico.ext { background: var(--line); color: var(--fg); }
   .ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
   .no { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .name { font-size: 17px; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
@@ -98,6 +99,7 @@
   .tag { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
   .tag.art { background: var(--accent-soft); color: var(--accent); }
   .tag.gh { background: var(--gh-soft); color: var(--gh); }
+  .tag.ext { background: var(--line); color: var(--fg); }
   .short { font-family: var(--font-mono); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; min-width: 0; }
 
   .empty { color: var(--muted); padding: 24px 0; }
@@ -121,13 +123,14 @@
       <button class="chip" type="button" data-f="all" aria-pressed="true">전체</button>
       <button class="chip" type="button" data-f="art" aria-pressed="false">아티팩트</button>
       <button class="chip" type="button" data-f="gh" aria-pressed="false">GitHub</button>
+      <button class="chip" type="button" data-f="ext" aria-pressed="false">외부 자료</button>
     </div>
   </div>
 
   <ul class="list" id="list"></ul>
   <div class="empty" id="empty" hidden>조건에 맞는 사이트가 없습니다.</div>
 
-  <footer>총 <span id="count">8</span>개</footer>
+  <footer>총 <span id="count">9</span>개</footer>
 </div>
 
 <script>
@@ -139,6 +142,7 @@
     caption: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 11h4M13 11h4M7 15h2M11 15h6"/></svg>',
     grade:   '<svg viewBox="0 0 24 24"><path d="M8 7 3 12l5 5"/><path d="M16 7l5 5-5 5"/><path d="M9.5 12.5l2 2 3.5-4"/></svg>',
     cal:     '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8.5 15l2.2 2.2 4.3-4.4"/></svg>',
+    book:    '<svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>',
     quiz:    '<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7l-4.5 4v-4H6a2 2 0 0 1-2-2z"/><path d="M9.6 8.4a2.4 2.4 0 1 1 3.4 2.2c-.7.4-1 .8-1 1.6"/><path d="M12 14.2v.1"/></svg>'
   };
 
@@ -152,7 +156,8 @@
     { no: 5, title: "수업 실시간 자막", icon: "caption", url: "https://bottlehoney99.github.io/class_review",                        kind: "gh",  label: "GitHub Pages" },
     { no: 6, title: "양퀴즈",           icon: "quiz",    url: "https://bottlehoney99.github.io/class-quiz",                          kind: "gh",  label: "GitHub Pages" },
     { no: 7, title: "코드 채점실",      icon: "grade",   url: "https://bottlehoney99.github.io/code-review",                         kind: "gh",  label: "GitHub Pages" },
-    { no: 8, title: "1학년 자격증 일정", icon: "cal",     url: "https://claude.ai/artifact/4RFLaqJ3BWsC2V5etnVevr",                  kind: "art", label: "아티팩트" }
+    { no: 8, title: "1학년 자격증 일정", icon: "cal",     url: "https://claude.ai/artifact/4RFLaqJ3BWsC2V5etnVevr",                  kind: "art", label: "아티팩트" },
+    { no: 9, title: "Claude Code with AI", icon: "book",  url: "https://gymcoding.notion.site/Claude-Code-with-AI-24c6a10d310b8077b064eca98557a416", kind: "ext", label: "Notion" }
   ];
 
   var listEl = document.getElementById("list");
